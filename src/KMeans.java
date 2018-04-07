@@ -15,8 +15,8 @@ public class KMeans {
 	private int[][] matrizParticao; // matriz binaria de partição
 	private double jcm;
 
-	private int numeroLinhas;
-	private int numeroDimensoes;
+	private int numeroLinhas; // equivale ao numero de documentos
+	private int numeroDimensoes; // equivale ao numero de palavras analisadas nos documentos
 	
 	private int max; // valor máximo dos números que podem ser escolhidos aleatoriamente para a criação dos prototipos
 	private int min; // valor mínimo dos números que podem ser escolhidos aleatoriamente para a criação dos prototipos
@@ -37,7 +37,7 @@ public class KMeans {
 			jcm = 0;
 			this.k = k;
 			this.taxaErro = taxaErro;
-			//CSVHelper csv = new CSVHelper(); 
+
 			
 			dados = new int[numeroLinhas][numeroDimensoes];
 			prototipos = new int[k][numeroDimensoes];
@@ -148,6 +148,7 @@ public class KMeans {
 		
 	}
 
+	// zera todos os campos da matriz de partição 
 	private void inicializarMatrizParticao() {
 		
 		for(int i = 0; i<k; i++){
@@ -173,9 +174,31 @@ public class KMeans {
 		return jcmAtual;
 	}
 	
+	// atualizar os prototipos de modo a melhorar o agrupamento
 	public void redefinirPrototipos()
 	{
-		
+		int integrantes = 0; // para calcular o total de dados pertencente ao determinado grupo
+		int dimensao = 0;
+		for(int i = 0; i<k; i++)
+		{
+			for(int j = 0; j<numeroLinhas; j++)
+			{
+				if(matrizParticao[i][j] == 1)
+				{
+					integrantes ++;
+					while (dimensao < numeroDimensoes)
+					{
+						prototipos[i][dimensao] = prototipos[i][dimensao] + dados[j][dimensao];
+						dimensao++;
+					}
+					dimensao = 0;
+				}
+				for(int w = 0; w<numeroDimensoes; w++)
+				{
+					prototipos[i][w] = prototipos[i][w]/integrantes;
+				}
+			}
+		}
 	}
 	
 	

@@ -32,7 +32,7 @@ public class KMeansDouble {
 	 * do arquivo csv que contém a matriz de dados É necessário definir a
 	 * quantidade k de clusters Receberemos os valores de linhas e colunas para
 	 * a matriz de dados visto que são valores previamente conhecidos e assim
-	 * evitamoa ter que ler o arquivo duas vezes consecutivas já que o
+	 * evitamos ter que ler o arquivo duas vezes consecutivas já que o
 	 * bufferedreader é para leitura sequencial
 	 */
 
@@ -134,7 +134,7 @@ public class KMeansDouble {
 					soma = soma + diferencaQuadrado;
 					atual++;
 				}
-				distanciaEuclidiana = Math.sqrt(soma);
+				distanciaEuclidiana = Math.sqrt(Math.abs(soma));
 				distanciasEuclidianas[i][j] = distanciaEuclidiana;
 				atual = 0;
 				soma = 0;
@@ -237,14 +237,15 @@ public class KMeansDouble {
 	 */
 	public double diferencaPrototipos(double [][] prototiposAnterior) {
 		double resposta = 0;
-		double [][] aux = new double[k][numeroDimensoes];
+		double soma = 0;
 		for(int i = 0; i<k; i++){
 			for(int j = 0; j<numeroDimensoes; j++){
-				aux[i][j] = prototipos[i][j] - prototiposAnterior[i][j];
+				soma = soma + (prototipos[i][j] - prototiposAnterior[i][j]) * (prototipos[i][j] - prototiposAnterior[i][j]);
 			}
+			resposta = resposta + Math.sqrt(Math.abs(soma));
+			soma = 0;
 		}
-		//ACABAAAR
-		//resp =
+		resposta = resposta/k;
 		return resposta;
 	}
 	
@@ -266,9 +267,18 @@ public class KMeansDouble {
 		this.taxaErro = taxaErro;
 	}
 
-	// TESTE
+	// PARA TESTE
 	public int[][] getMatrizParticao() {
 		return matrizParticao;
+	}
+
+	// getter e setter dos centroides atuais
+	public final double[][] getPrototipos() {
+		return prototipos;
+	}
+
+	public final void setPrototipos(double[][] prototipos) {
+		this.prototipos = prototipos;
 	}
 
 }
